@@ -10,20 +10,11 @@
 
 (deftest fact-database-test
   (testing "varon(juan). should be true"
-    (is (= (evaluate-query fact-database "varon(juan).")
+    (is (= (evaluate-query fact-database "varon(juan)")
            true)))
   (testing "mujer(maria). should be true"
-    (is (= (evaluate-query fact-database "mujer(maria).")
+    (is (= (evaluate-query fact-database "mujer(maria)")
            true)))
   (testing "mujer(pedro). should be false"
-    (is (= (evaluate-query fact-database "mujer(pedro).")
+    (is (= (evaluate-query fact-database "mujer(pedro)")
            false))))
-
-
-
-(def rule "
-  hija(X, Y) :- mujer(X), padre(Y, X).")
-
-(deftest rule123
-  (testing "que funcione"
-    (is (= r/new-rule rule) true)))

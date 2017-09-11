@@ -8,16 +8,20 @@
 
 (defn evaluate-rule
   "Returns true if the rule exists and is correct, otherwise false."
-  [query db]
-  (let [rule (r/new-rule query)])
-  )
+  [fact db]
+  (if (not= (filter #(= % (. fact name)) (map :name (:rules db))) [])
+    true
+    false
+  ))
+  
 
 (defn run-query
   "Runs the query and returns True or False"
   [db query]
+  (let [fact (f/new-fact query)]
   (cond
-    (not= (filter #(= % (f/new-fact query)) (:facts db)) []) true
-    (evaluate-rule query db) true
+    (not= (filter #(= % fact) (:facts db)) []) true
+    (evaluate-rule fact db) 5
     :else false
     )
-  )
+  ))
