@@ -11,6 +11,5 @@
     (let [rules (filter #(u/is-rule? %) db-vector)
           facts (filter #(u/is-fact? %) db-vector)]
       {:rules (map r/new-rule rules) :facts (map f/new-fact facts)})
-      ;{:rules (map f/new-fact facts) :facts (map f/new-fact facts)})
     )
   )

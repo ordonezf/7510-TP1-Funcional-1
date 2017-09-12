@@ -6,6 +6,7 @@
 
 (defrecord Rule [name args strfact vfact])
 
+
 (defn parse-rule-facts
   "Parses the facts portion of a rule."
   [fact-str]
