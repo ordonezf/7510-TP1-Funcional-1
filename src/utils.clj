@@ -1,27 +1,18 @@
 (ns utils
   (:require [clojure.string :as str]))
 
-; 'fact(arg1, arg2,..., argn).'
-(defn fact-regex
-  "Returns the fact if it's valid, otherwise nil"
-  [fact]
-  (re-matches #"^([a-z]+)\(([[a-z]+[, [a-z]+]?]+)\)$" fact)
-  )
+; 'fact(arg1, arg2, ..., argn)'.
+(def fact-regex "^([a-z]+)\\(((?:[a-z]+, )*[a-z]+)\\)$")
+; 'fact(ARG1, ARG2, ..., ARGN)'.
+(def fact-in-rule-regex "^([a-z]+)\\(((?:[A-Z]+, )*[A-Z]+)\\)$")
+; 'rule(ARGS) :- facts(ARGS)'.
+(def rule-regex "^([a-z]+)\\(((?:[A-Z]+, )*[A-Z]+)\\) :- ([([a-z]+)\\(((?:[A-Z]+, )*[A-Z]+)\\)]+)$")
 
-;TODO :: Validar que los parametros de entrada sean los mismos que se evaluan despues del ":-".
-; 'rule(X, Y) :- fact(X), fact(Y).'
-(defn rule-regex
-  "Returns the rule if it's valid, otherwise nil"
-  [rule]
-  (re-matches #"^([a-z]+)\(([[A-Z]+[, [A-Z]+]?]+)\) :- ([[a-z]+\([[A-Z]+[, [A-Z]+]?]+\)]+)$" rule)
+(defn regex-match
+  "Runs the regex against the string"
+  [regex string]
+  (re-matches (re-pattern regex) string)
   )
-
-(defn fact-regex-rule
-  "For facts inside rules. Returns the fact if it's valid, otherwise nil"
-  [fact]
-  (re-matches #"^([a-z]+)\(([[A-Z]+[, [A-Z]+]?]+)\)$" fact)
-  )
-
 
 (defn is-rule?
   [rule]
@@ -45,5 +36,17 @@
 (defn is-valid-query?
   "Returns True if the query is valid, else false."
   [query]
-  (not (nil? (fact-regex query)))
+  (not (nil? (regex-match fact-regex query)))
     )
+
+(defn query-has-correct-args?
+  "Returns true if the query has valid arguments"
+  [query rule]
+  (= (count (:args query)) (count (:args rule)))
+  )
+
+(defn argument-dictionary
+  "Maps the arguments of the query with the arguments of the rule."
+  [rule-args fact-args]
+  (map #(get rule-args %) fact-args)
+  )

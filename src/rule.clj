@@ -4,8 +4,7 @@
             [fact :as f]))
 
 
-(defrecord Rule [name args strfact vfact])
-
+(defrecord Rule [name args vfact])
 
 (defn parse-rule-facts
   "Parses the facts portion of a rule."
@@ -17,11 +16,10 @@
 (defn new-rule
   "Creates a rule with format: {:name 'name' :args [args] :vfact [facts]}"
   [rule]
-  (let [rule-vector (u/rule-regex rule)]
+  (let [rule-vector (u/regex-match u/rule-regex rule)]
     (if (= (count rule-vector) 4)
       (new Rule (nth rule-vector 1)
-                (str/split (nth rule-vector 2) #", ")
-                (nth rule-vector 3)
-                (map f/new-fact-for-rule (parse-rule-facts (nth rule-vector 3))))
+           (str/split (nth rule-vector 2) #", ")
+           (map f/new-fact-for-rule (parse-rule-facts (nth rule-vector 3))))
       nil)
   ))
