@@ -50,3 +50,9 @@
   [rule-args fact-args]
   (map #(get rule-args %) fact-args)
   )
+
+(defn is-fact-true?
+  "Looks for the fact in the fact-db, if it exists it returns true, else false."
+  [fact fact-db]
+  (= (count (filter #(= % fact) fact-db)) 1)
+  )

@@ -4,10 +4,6 @@
             [rule :as r]
             [fact :as f]))
 
-(defn fun2
-  [fact fact-db]
-  (= (count (filter #(= % fact) fact-db)) 1))
-
 (defn is-query-true?
   "Returns true if the query follows the rule, else false"
   [query rule db]
@@ -16,7 +12,7 @@
         rule-facts-names (map #(:name %) facts)
         rule-facts-arg-names (map #(:args %) facts)
         args-translated (map #(u/argument-dictionary rule-args %) rule-facts-arg-names)]
-        (= (count (filter #(fun2 % (:facts db))
+        (= (count (filter #(u/is-fact-true? % (:facts db))
                           (map f/simple-new-fact rule-facts-names args-translated)))
            (count facts))
     )
@@ -40,7 +36,8 @@
   [query db]
   (let [fact (f/new-fact query)]
   (cond
-    (= (count (filter #(= % fact) (:facts db))) 1) true
+    ;(= (count (filter #(= % fact) (:facts db))) 1) true
+    (u/is-fact-true? fact (:facts db)) true
     (evaluate-rule fact db) true
     :else false
     )
